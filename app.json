@@ -1,41 +1,30 @@
 {
   "expo": {
-    "scheme": "your-app-scheme",
-    "experiments": {
-      "typedRoutes": true
-    },
-
-    "name": "my-app",
-    "slug": "my-app",
+    "name": "Coinvertix",
+    "slug": "Coinvertix",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/asdeouros.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
-
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./assets/asdeouros.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-
     "ios": {
       "supportsTablet": true
     },
-
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "edgeToEdgeEnabled": true
     },
-
     "web": {
       "favicon": "./assets/favicon.png"
     },
-
     "plugins": [
       "expo-router"
     ]
