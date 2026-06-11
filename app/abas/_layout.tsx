@@ -1,7 +1,9 @@
 import { Tabs } from "expo-router";
 import { View, Text, StyleSheet } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
+import React from "react";
 
+// Definição estrita das cores para o TypeScript
 const CORES = {
   fundo:      "#0a0e1a",
   ouro:       "#f5c542",
@@ -11,13 +13,20 @@ const CORES = {
   borda:      "#1e2540",
   pill:       "#f5c54220",
   pillBorda:  "#f5c54260",
-};
+} as const;
 
-function TabIcon({ icon, label, focused }) {
+// Interface para as propriedades do componente TabIcon
+interface TabIconProps {
+  icon: string;
+  label: string;
+  focused: boolean;
+}
+
+function TabIcon({ icon, label, focused }: TabIconProps) {
   return (
     <View style={[styles.iconWrap, focused && styles.iconWrapActive]}>
       <FontAwesome5
-        name={icon}
+        name={icon as any} // 'as any' ou caminhos estritos de glifos do FontAwesome5 se necessário
         size={20}
         color={focused ? CORES.ouro : CORES.tintaSuave}
         solid={focused}

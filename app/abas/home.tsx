@@ -1,15 +1,35 @@
-// app/abas/home.js
+// app/abas/home.tsx
 import React, { useEffect, useState, useRef } from 'react';
 import {
-  View, Text, StyleSheet, TouchableOpacity, Animated, Dimensions, Image,
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Animated,
+  Dimensions,
+  Image,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
-import { useFocusEffect } from 'expo-router';
-import { useCallback } from 'react';
 
+// Interfaces e Tipagens
+interface Usuario {
+  nome: string;
+  [key: string]: any; // Permite outros campos que venham no JSON do usuário
+}
+
+interface Estrela {
+  id: number;
+  top: number;
+  left: number;
+  size: number;
+  opacity: number;
+}
+
+// Dimensões da Tela
 const { width, height } = Dimensions.get('window');
 
+// Paleta de Cores (Design System)
 const CORES = {
   fundo: '#0a0e1a',
   papel: '#0d1120',
@@ -19,9 +39,10 @@ const CORES = {
   tintaSuave: '#4a6fa5',
   borda: '#1e2540',
   amarelo: '#f5c542',
-};
+} as const;
 
-const ESTRELAS = Array.from({ length: 40 }, (_, i) => ({
+// Geração do background estelar estático
+const ESTRELAS: Estrela[] = Array.from({ length: 40 }, (_, i) => ({
   id: i,
   top: Math.random() * 100,
   left: Math.random() * 100,
@@ -31,40 +52,75 @@ const ESTRELAS = Array.from({ length: 40 }, (_, i) => ({
 
 export default function Home() {
   const router = useRouter();
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const slideAnim = useRef(new Animated.Value(40)).current;
-  const pulseAnim = useRef(new Animated.Value(1)).current;
-  const [usuario, setUsuario] = useState(null);
+  
+  // Referências de Animação com tipagem explícita
+  const fadeAnim = useRef<Animated.Value>(new Animated.Value(0)).current;
+  const slideAnim = useRef<Animated.Value>(new Animated.Value(40)).current;
+  const pulseAnim = useRef<Animated.Value>(new Animated.Value(1)).current;
+  
+  // Estado tipado (pode ser Usuario ou null)
+  const [usuario, setUsuario] = useState<Usuario | null>(null);
 
   useEffect(() => {
-    AsyncStorage.getItem('@coinvertix_usuario').then(u => {
-      if (u) setUsuario(JSON.parse(u));
-    });
+    // Busca os dados do usuário de forma assíncrona
+    const buscarUsuario = async () => {
+      try {
+        const u = await AsyncStorage.getItem('@coinvertix_usuario');
+        if (u) {
+          setUsuario(JSON.parse(u) as Usuario);
+        }
+      } catch (error) {
+        console.error('Erro ao carregar dados do usuário:', error);
+      }
+    };
+
+    buscarUsuario();
+
+    // Loop e animações em paralelo utilizando Native Driver para melhor performance
     Animated.parallel([
       Animated.timing(fadeAnim, { toValue: 1, duration: 900, useNativeDriver: true }),
       Animated.timing(slideAnim, { toValue: 0, duration: 700, useNativeDriver: true }),
     ]).start();
+
     Animated.loop(
       Animated.sequence([
         Animated.timing(pulseAnim, { toValue: 1.08, duration: 2000, useNativeDriver: true }),
         Animated.timing(pulseAnim, { toValue: 1.00, duration: 2000, useNativeDriver: true }),
       ])
     ).start();
-  }, []);
+  }, [fadeAnim, slideAnim, pulseAnim]);
 
   return (
     <View style={styles.container}>
+      {/* Background Estelar */}
       {ESTRELAS.map(e => (
-        <View key={e.id} style={[styles.estrela, {
-          top: `${e.top}%`, left: `${e.left}%`,
-          width: e.size, height: e.size, opacity: e.opacity,
-        }]} />
+        <View
+          key={e.id}
+          style={[
+            styles.estrela,
+            {
+              top: `${e.top}%`,
+              left: `${e.left}%`,
+              width: e.size,
+              height: e.size,
+              opacity: e.opacity,
+            },
+          ]}
+        />
       ))}
+      
       <View style={styles.brilhoCentral} />
 
-      <Animated.View style={[styles.conteudo, {
-        opacity: fadeAnim, transform: [{ translateY: slideAnim }],
-      }]}>
+      <Animated.View
+        style={[
+          styles.conteudo,
+          {
+            opacity: fadeAnim,
+            transform: [{ translateY: slideAnim }],
+          },
+        ]}
+      >
+        {/* Globo com a logo */}
         <Animated.View style={[styles.globoWrap, { transform: [{ scale: pulseAnim }] }]}>
           <View style={styles.globo}>
             <View style={styles.globoAnel} />
@@ -73,9 +129,10 @@ export default function Home() {
               style={styles.globoImagem}
               resizeMode="contain"
             />
-          </View>     
+          </View>
         </Animated.View>
 
+        {/* Textos de Boas-Vindas */}
         <Text style={styles.titulo}>
           BEM{'\n'}VINDO(A),{'\n'}
           <Text style={styles.tituloNome}>
@@ -87,8 +144,8 @@ export default function Home() {
           Escolha uma opção abaixo para começar{'\n'}a converter moedas
         </Text>
 
+        {/* Menu de Opções */}
         <View style={styles.botoesWrap}>
-          {/* OUTLINE — fundo transparente, borda azul, texto claro */}
           <TouchableOpacity
             style={styles.botao}
             onPress={() => router.push('/simulacao')}
@@ -113,13 +170,6 @@ export default function Home() {
 }
 
 const styles = StyleSheet.create({
-
-  globoImagem: {
-  width: 90,
-  height: 90,
-  borderRadius: 45,
-},
-
   container: {
     flex: 1,
     backgroundColor: CORES.fundo,
@@ -147,31 +197,57 @@ const styles = StyleSheet.create({
     paddingHorizontal: 32,
     width: '100%',
   },
-  globoWrap: { marginBottom: 28 },
+  globoWrap: {
+    marginBottom: 28,
+  },
   globo: {
-    width: 120, height: 120, borderRadius: 60,
+    width: 120,
+    height: 120,
+    borderRadius: 60,
     backgroundColor: '#1d6fff18',
-    borderWidth: 1.5, borderColor: '#1d6fff66',
-    alignItems: 'center', justifyContent: 'center', position: 'relative',
+    borderWidth: 1.5,
+    borderColor: '#1d6fff66',
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'relative',
   },
   globoAnel: {
     position: 'absolute',
-    width: 190, height: 190, borderRadius: 95,
-    borderWidth: 1, borderColor: '#1d6fff22',
+    width: 190,
+    height: 190,
+    borderRadius: 95,
+    borderWidth: 1,
+    borderColor: '#1d6fff22',
   },
-  globoIcone: { fontSize: 42 },
+  globoImagem: {
+    width: 90,
+    height: 90,
+    borderRadius: 45,
+  },
   titulo: {
-    fontSize: 36, fontWeight: '800', color: CORES.tinta,
-    textAlign: 'center', lineHeight: 44, letterSpacing: 1, marginBottom: 16,
+    fontSize: 36,
+    fontWeight: '800',
+    color: CORES.tinta,
+    textAlign: 'center',
+    lineHeight: 44,
+    letterSpacing: 1,
+    marginBottom: 16,
   },
-  tituloNome: { color: CORES.amarelo },
+  tituloNome: {
+    color: CORES.amarelo,
+  },
   subtitulo: {
-    fontSize: 14, color: CORES.tintaSuave,
-    textAlign: 'center', lineHeight: 22, marginBottom: 48, fontStyle: 'italic',
+    fontSize: 14,
+    color: CORES.tintaSuave,
+    textAlign: 'center',
+    lineHeight: 22,
+    marginBottom: 48,
+    fontStyle: 'italic',
   },
-  botoesWrap: { width: '100%', gap: 14 },
-
-  // FIGMA: outline — fundo transparente, borda azul
+  botoesWrap: {
+    width: '100%',
+    gap: 14,
+  },
   botao: {
     backgroundColor: 'transparent',
     borderRadius: 16,

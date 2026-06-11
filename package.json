@@ -27,6 +27,8 @@
   },
   "private": true,
   "devDependencies": {
-    "concurrently": "^10.0.0"
+    "@types/react": "~19.1.10",
+    "concurrently": "^10.0.0",
+    "typescript": "~5.9.2"
   }
 }
