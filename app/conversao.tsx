@@ -14,7 +14,7 @@ import {
   Dimensions,
 } from 'react-native';
 import { useRouter } from 'expo-router';
-import { buscarMoedas, converter } from './api';
+import { buscarMoedas, converter } from '../lib/api';
 
 const { width } = Dimensions.get('window');
 

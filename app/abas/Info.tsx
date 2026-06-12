@@ -15,7 +15,7 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from 'expo-router';
-import { converter } from '../api';
+import { converter } from '../../lib/api';
 
 // Configurações de Armazenamento
 const STORAGE_SALDO = '@coinvertix_saldo';

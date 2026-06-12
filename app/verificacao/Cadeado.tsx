@@ -1,29 +1,24 @@
 // app/verificacao/Cadeado.tsx
 import { useEffect } from 'react';
 import { useRouter } from 'expo-router';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '../../lib/firebase';
 
 export default function Cadeado(): null {
   const router = useRouter();
 
   useEffect(() => {
-    const verificar = async (): Promise<void> => {
-      try {
-        const usuarioStr = await AsyncStorage.getItem('@coinvertix_usuario');
-
-        if (usuarioStr) {
-          router.replace('/abas/home'); // já logado → vai pra home
-        } else {
-          router.replace('/verificacao/login'); // não logado → vai pro login
-        }
-      } catch (error) {
-        console.error('Erro ao verificar sessão no Cadeado:', error);
+    // Usa o Firebase como fonte de verdade, não o AsyncStorage
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        router.replace('/abas/home');
+      } else {
         router.replace('/verificacao/login');
       }
-    };
+    });
 
-    verificar();
+    return () => unsubscribe();
   }, [router]);
 
-  return null; // não renderiza nada, só redireciona
+  return null;
 }
