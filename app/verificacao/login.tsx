@@ -80,9 +80,93 @@ const FIREBASE_ERROS: Record<string, string> = {
   'auth/invalid-credential':    'E-mail ou senha incorretos.',
 };
 
-function mensagemFirebase(code: string): string {
+export function mensagemFirebase(code: string): string {
   return FIREBASE_ERROS[code] ?? 'Ocorreu um erro. Tente novamente.';
 }
+
+
+/**
+ * Teste 1: Verifica se o campo de e-mail está vazio ou preenchido apenas com espaços.
+ * Retorna 'true' se o e-mail for válido (não vazio) e 'false' se estiver vazio.
+ */
+export function validarEmailObrigatorio(email: string): boolean {
+  if (!email || email.trim() === "") {
+    return false;
+  }
+  return true;
+}
+
+/**
+ * Teste 2: Valida se o formato do e-mail é válido utilizando uma expressão regular.
+ * Retorna 'true' para formatos válidos e 'false' para inválidos.
+ */
+export function validarFormatoEmail(email: string): boolean {
+  const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return regexEmail.test(email);
+}
+
+/**
+ * Teste 3: Verifica se a senha atende ao critério de segurança de tamanho mínimo (6 caracteres).
+ * Retorna 'true' se for válida e 'false' se for muito curta.
+ */
+export function validarTamanhoSenha(senha: string): boolean {
+  return senha.length >= 6;
+}
+
+/**
+ * Teste 4: Verifica se a senha digitada e a confirmação de senha são exatamente iguais.
+ * Retorna 'true' se coincidirem e 'false' se forem differentes.
+ */
+export function validarConfirmacaoSenha(senha: string, confirmacao: string): boolean {
+  return senha === confirmacao;
+}
+
+/**
+ * Teste 5: Valida o valor inserido para conversão.
+ * Retorna 'true' se o valor for maior que zero e 'false' se for zero ou negativo.
+ */
+export function validarValorConversao(valor: number): boolean {
+  return valor > 0;
+}
+
+/**
+ * Teste 6: Formata um número bruto no padrão de moeda brasileiro (R$ 10,00).
+ */
+export function formatarMoeda(valor: number): string {
+  return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+}
+
+/**
+ * Teste 7: Executa a operação matemática de conversão de moedas.
+ */
+export function calcularConversao(valor: number, taxa: number): number {
+  return valor * taxa;
+}
+
+/**
+ * Teste 8: Garante que o nome do usuário não ultrapasse 50 caracteres.
+ */
+export function limitarCaracteresNome(nome: string): boolean {
+  return nome.length <= 50;
+}
+
+/**
+ * Teste 9: Traduz os termos técnicos do banco de dados para a interface.
+ */
+export function traduzirTipoTransacao(tipo: string): string {
+  return tipo === 'income' ? 'Entrada' : 'Saída';
+}
+
+/**
+ * Teste 10: Valida se a transação possui valor maior que zero e uma descrição preenchida.
+ */
+export function validarCamposTransacao(valor: number, descricao: string): boolean {
+  if (valor <= 0 || !descricao || descricao.trim() === "") {
+    return false;
+  }
+  return true;
+}
+
 
 // ── Componente ───────────────────────────────────────────────────────────────
 
