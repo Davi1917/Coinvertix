@@ -1,8 +1,10 @@
-import { mensagemFirebase, validarEmailObrigatorio, validarFormatoEmail, validarTamanhoSenha, validarConfirmacaoSenha, validarValorConversao, formatarMoeda, calcularConversao, limitarCaracteresNome, traduzirTipoTransacao, validarCamposTransacao } from './login';
 // 1. Mock do AsyncStorage
 jest.mock('@react-native-async-storage/async-storage', () =>
   require('@react-native-async-storage/async-storage/jest/async-storage-mock')
 );
+
+import { mensagemFirebase, validarEmailObrigatorio, validarFormatoEmail, validarTamanhoSenha, validarConfirmacaoSenha, validarValorConversao, formatarMoeda, calcularConversao, limitarCaracteresNome, traduzirTipoTransacao, validarCamposTransacao } from './login';
+
 
 // 2. Mock do arquivo local de configuração do Firebase
 jest.mock('../../lib/firebase', () => ({
