@@ -45,6 +45,7 @@ const CORES = {
 } as const;
 
 // Geradas fora do componente para evitar re-render
+// Cada estrela tem posição, tamanho e opacidade aleatórios para criar um efeito de fundo estrelado dinâmico e visualmente interessante. A função Array.from é usada para criar um array de 40 estrelas, cada uma com propriedades únicas.
 const ESTRELAS: Estrela[] = Array.from({ length: 40 }, (_, i) => ({
   id:      i,
   top:     Math.random() * 100,

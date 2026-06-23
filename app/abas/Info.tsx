@@ -1,4 +1,5 @@
 // app/abas/info.tsx
+// Este componente é responsável por exibir informações detalhadas sobre o saldo fictício do usuário e suas conversões em diferentes moedas. Ele utiliza o AsyncStorage para recuperar o saldo definido pelo usuário e faz chamadas à API de conversão para calcular os valores correspondentes em outras moedas. O componente também oferece a funcionalidade de alterar o saldo diretamente na interface, com validação de entrada e persistência do novo valor.
 import React, { useEffect, useState, useCallback } from 'react';
 import {
   View,
@@ -75,6 +76,8 @@ function formatarValor(valor: number | undefined, codigo: string): string {
   })}`;
 }
 
+// Componente Principal
+//Sua função principal é exibir o saldo fictício do usuário e suas conversões em diferentes moedas, permitindo também a alteração do saldo diretamente na interface. Ele gerencia estados de carregamento, atualização e modal de edição, garantindo uma experiência de usuário fluida e responsiva.
 export default function Info() {
   const [saldo, setSaldo]             = useState<number>(5.0);
   const [convertidos, setConvertidos] = useState<Convertidos>({});
@@ -84,6 +87,7 @@ export default function Info() {
   const [novoSaldo, setNovoSaldo]     = useState<string>('');
 
   // Busca assíncrona das taxas na API externa
+  // A função buscarConversoes é responsável por iterar sobre a lista de moedas suportadas, realizar chamadas à API de conversão para cada moeda e atualizar o estado com os valores convertidos. Ela também gerencia os estados de carregamento e atualização, garantindo que a interface do usuário reflita corretamente o status das operações.
   const buscarConversoes = useCallback(async () => {
     setLoading(true);
     try {
@@ -92,7 +96,7 @@ export default function Info() {
         try {
           const res = await converter('BRL', moeda.destino);
           const chave = `BRL${moeda.destino}`;
-          const taxa = res?.[chave]?.bid;
+          const taxa = await converter('BRL', moeda.destino);
           
           if (taxa) {
             resultados[moeda.codigo] = saldo * Number(taxa);
@@ -111,6 +115,7 @@ export default function Info() {
   }, [saldo]);
 
   // Recarrega o saldo salvo localmente sempre que a tela ganha foco
+  // A função carregarSaldo é responsável por recuperar o saldo fictício armazenado no AsyncStorage sempre que a tela de informações for focada. Ela garante que o valor exibido esteja sempre atualizado, mesmo após navegação entre diferentes telas do aplicativo.
   useFocusEffect(
     useCallback(() => {
       AsyncStorage.getItem(STORAGE_SALDO)
@@ -160,7 +165,7 @@ export default function Info() {
     setRefreshing(true);
     buscarConversoes();
   };
-
+// Renderiza a interface do usuário, incluindo o cabeçalho, campo de entrada para o saldo, opções de inserção rápida e botão de consolidação. O KeyboardAvoidingView é utilizado para ajustar a interface quando o teclado estiver visível, garantindo uma experiência de usuário fluida.
   return (
     <ImageBackground source={require('../../assets/fundo.png')} style={styles.backgroundImage} resizeMode="cover">
       <ScrollView
@@ -279,6 +284,10 @@ export default function Info() {
     </ImageBackground>
   );
 }
+
+// ── Estilos ──────────────────────────────────────────────────────────────────
+// Estilos utilizados na interface do usuário, garantindo consistência visual e responsividade em diferentes dispositivos. O StyleSheet é utilizado para criar um conjunto de estilos reutilizáveis para os componentes da tela de informações.
+// O uso de cores, espaçamentos e tipografia segue o design system definido para o aplicativo, assegurando uma experiência de usuário coesa e agradável.
 
 const styles = StyleSheet.create({
   backgroundImage: {

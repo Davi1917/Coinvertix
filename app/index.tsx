@@ -1,4 +1,6 @@
 // app/index.tsx
+// Este arquivo é a porta de entrada do aplicativo. Ele verifica o estado de autenticação do usuário usando o Firebase Authentication e redireciona para a tela apropriada com base nesse estado. Se o usuário estiver autenticado, ele é redirecionado para a tela principal (/abas/home); caso contrário, ele é redirecionado para a tela de login (/verificacao/login). Durante a verificação, um spinner de carregamento é exibido no centro da tela.
+// O componente utiliza o hook useEffect para monitorar mudanças no estado de autenticação e o hook useState para gerenciar o destino do redirecionamento. O AsyncStorage é usado para armazenar localmente as informações do usuário, garantindo que o perfil local seja reconstruído caso tenha sido apagado.
 import { useEffect, useState } from 'react';
 import { View, ActivityIndicator } from 'react-native';
 import { Redirect } from 'expo-router';

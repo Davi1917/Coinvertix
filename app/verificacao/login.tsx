@@ -61,6 +61,9 @@ const CORES = {
   infoFundo:  '#1d6fff18',
 } as const;
 
+//──────────────────────────────────────────────────────────────────────────────
+// Este array contém 35 estrelas geradas aleatoriamente para o fundo da tela de login. Cada estrela possui propriedades de posição, tamanho e opacidade, criando um efeito visual dinâmico e agradável.
+//──────────────────────────────────────────────────────────────────────────────
 const ESTRELAS: Estrela[] = Array.from({ length: 35 }, (_, i) => ({
   id:      i,
   top:     Math.random() * 100,
@@ -68,6 +71,8 @@ const ESTRELAS: Estrela[] = Array.from({ length: 35 }, (_, i) => ({
   size:    Math.random() * 2 + 1,
   opacity: Math.random() * 0.4 + 0.15,
 }));
+
+//Este objeto mapeia os códigos de erro do Firebase para mensagens de erro amigáveis ao usuário. Ele é usado para fornecer feedback claro e compreensível quando ocorrem erros durante operações de autenticação, como login ou cadastro.
 
 const FIREBASE_ERROS: Record<string, string> = {
   'auth/user-not-found':        'Usuário não encontrado.',
@@ -207,7 +212,10 @@ export default function Login(): React.JSX.Element {
     } finally {
       setLoading(false);
     }
-  }
+  } 
+
+  // ── Funções auxiliares ─────────────────────────────────────────────────────
+  // A função criarConta é responsável por validar os campos de cadastro, criar um novo usuário no Firebase Authentication e salvar as informações do usuário localmente. Ela também lida com erros e atualiza o estado da interface conforme necessário.
 
   async function criarConta(): Promise<void> {
     if (!novoNome.trim())          { setErroCadastro('Digite seu nome.');                              return; }
@@ -231,6 +239,8 @@ export default function Login(): React.JSX.Element {
     }
   }
 
+  // Função para enviar e-mail de redefinição de senha. Ela verifica se o campo de e-mail está preenchido, envia o e-mail usando a função sendPasswordResetEmail do Firebase Authentication e trata possíveis erros, exibindo mensagens apropriadas para o usuário.
+
   async function esqueceuSenha(): Promise<void> {
     if (!email.trim()) {
       Alert.alert('Atenção', 'Digite seu e-mail no campo acima primeiro.');
@@ -244,7 +254,7 @@ export default function Login(): React.JSX.Element {
       Alert.alert('Erro', mensagemFirebase(code));
     }
   }
-
+// A função salvarUsuarioLocal é responsável por armazenar localmente as informações do usuário após o login ou cadastro. Ela cria um objeto PerfilLocal com os dados do usuário e o salva no AsyncStorage, permitindo que a aplicação mantenha o estado do usuário entre sessões.
   async function salvarUsuarioLocal(user: User, nomeOverride?: string): Promise<void> {
     const nome: string = nomeOverride ?? user.displayName ?? user.email?.split('@')[0] ?? 'Usuário';
     const perfil: PerfilLocal = {

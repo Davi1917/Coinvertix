@@ -22,6 +22,8 @@ interface TabIconProps {
   focused: boolean;
 }
 
+// Componente que representa o ícone e rótulo de cada aba na barra de navegação inferior. Ele ajusta o estilo com base no estado de foco da aba, alterando a cor do ícone e do rótulo para indicar qual aba está ativa.
+
 function TabIcon({ icon, label, focused }: TabIconProps) {
   return (
     <View style={[styles.iconWrap, focused && styles.iconWrapActive]}>
@@ -38,6 +40,7 @@ function TabIcon({ icon, label, focused }: TabIconProps) {
   );
 }
 
+// Componente principal que define a estrutura de abas do aplicativo, utilizando o Tabs do Expo Router. Cada aba é configurada com um ícone e rótulo, e o estilo da barra de abas é personalizado para se alinhar com o tema do aplicativo.
 export default function AbasLayout() {
   return (
     <Tabs
@@ -76,7 +79,7 @@ export default function AbasLayout() {
     </Tabs>
   );
 }
-
+// Estilos utilizados na interface do usuário, garantindo consistência visual e responsividade em diferentes dispositivos. O StyleSheet é utilizado para criar um conjunto de estilos reutilizáveis para os componentes da tela de abas.
 const styles = StyleSheet.create({
   tabBar: {
     backgroundColor: CORES.fundo,

@@ -1,4 +1,6 @@
 // app/simulacao.tsx
+// Este componente é responsável por permitir que o usuário defina um saldo fictício em Reais (BRL) para simulação de conversões. Ele utiliza o AsyncStorage para armazenar localmente o valor definido pelo usuário, garantindo que o saldo seja persistido entre sessões. O componente também oferece opções de inserção rápida de valores predefinidos e valida a entrada do usuário para garantir que apenas valores numéricos válidos sejam aceitos.
+// O layout da tela inclui um cabeçalho com um botão de retorno, um campo de entrada para o saldo, botões de inserção rápida e um botão para consolidar o capital definido. O componente utiliza hooks do React e do Expo Router para gerenciar o estado e a navegação.
 import React, { useEffect, useState, useCallback } from 'react';
 import {
   View,
@@ -14,7 +16,10 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter, useFocusEffect } from 'expo-router';
 
+// Constante para a chave de armazenamento do saldo fictício no AsyncStorage
 const STORAGE_SALDO = '@coinvertix_saldo';
+
+// Define as cores utilizadas na interface do usuário, garantindo consistência visual em todo o aplicativo.
 
 const CORES = {
   fundo:      '#0a0e1a',
@@ -28,11 +33,13 @@ const CORES = {
   amarelo:    '#f5c542',
 } as const;
 
+// Define a interface RapidoOpcao para representar as opções de inserção rápida de saldo, contendo um rótulo e um valor numérico correspondente.
 interface RapidoOpcao {
   label: string;
   valor: number;
 }
 
+// Define um array de opções rápidas de saldo, permitindo que o usuário selecione valores predefinidos para facilitar a entrada de dados.
 const RAPIDOS: RapidoOpcao[] = [
   { label: 'R$ 10,00',   valor: 10   },
   { label: 'R$ 100,00',  valor: 100  },
@@ -54,6 +61,8 @@ export default function Simulacao() {
       console.error('Falha ao sincronizar o erário local:', e);
     }
   }, []);
+
+  // Use useFocusEffect para garantir que o saldo seja carregado sempre que a tela de simulação for focada, mantendo o valor atualizado mesmo após navegação entre telas.
 
   useFocusEffect(
     useCallback(() => {
@@ -79,6 +88,8 @@ export default function Simulacao() {
       Alert.alert('Erro', 'Não foi possível registrar o novo saldo.');
     }
   }
+
+  // Renderiza a interface do usuário, incluindo o cabeçalho, campo de entrada para o saldo, opções de inserção rápida e botão de consolidação. O KeyboardAvoidingView é utilizado para ajustar a interface quando o teclado estiver visível, garantindo uma experiência de usuário fluida.
 
   return (
     <KeyboardAvoidingView
@@ -136,7 +147,7 @@ export default function Simulacao() {
     </KeyboardAvoidingView>
   );
 }
-
+// Define os estilos utilizados na interface do usuário, garantindo consistência visual e responsividade em diferentes dispositivos. O StyleSheet é utilizado para criar um conjunto de estilos reutilizáveis para os componentes da tela de simulação.
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: CORES.fundo },
   scroll: { paddingBottom: 40, paddingTop: 50 },

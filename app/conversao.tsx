@@ -1,4 +1,5 @@
 // app/conversao.tsx
+//Este arquivo implementa a tela de conversão monetária do aplicativo. Ele permite que os usuários selecionem moedas de origem e destino, insiram uma quantia e realizem a conversão direta usando taxas de câmbio obtidas de uma API. A interface inclui um seletor de moedas customizado, campos de entrada, botões de ação e exibição dos resultados da conversão.
 import React, { useEffect, useState, useRef } from 'react';
 import {
   View,
@@ -18,6 +19,8 @@ import { buscarMoedas, converter } from '../lib/api';
 
 const { width } = Dimensions.get('window');
 
+// Definição das cores utilizadas na interface do aplicativo
+
 const CORES = {
   fundo:      '#0a0e1a',
   papel:      '#0d1120',
@@ -33,17 +36,23 @@ const CORES = {
   verde:      '#22c55e',
 } as const;
 
+
+// Interfaces para tipagem de moedas e resultados de conversão
+// A interface Moeda define a estrutura de uma moeda, incluindo seu código, nome e bandeira.
 interface Moeda {
   codigo: string;
   nome: string;
   bandeira: string;
 }
 
+// A interface ResultadoConversao define a estrutura do resultado da conversão, incluindo o valor original, o valor convertido e a taxa de câmbio utilizada.
 interface ResultadoConversao {
   valorOriginal: string;
   valorConvertido: number;
   taxa: number;
 }
+
+// Lista de moedas padrão para inicialização da aplicação
 
 const MOEDAS_PADRAO: Moeda[] = [
   { codigo: 'BRL', nome: 'Real Brasileiro',  bandeira: '🇧🇷' },
@@ -53,6 +62,8 @@ const MOEDAS_PADRAO: Moeda[] = [
   { codigo: 'GBP', nome: 'Libra Esterlina',  bandeira: '🇬🇧' },
   { codigo: 'ARS', nome: 'Peso Argentino',   bandeira: '🇦🇷' },
 ];
+
+// Componente principal da tela de conversão monetária
 
 export default function Conversao() {
   const router = useRouter();
@@ -184,7 +195,8 @@ export default function Conversao() {
       </View>
     );
   }
-
+// Interface principal da tela de conversão monetária. 
+// Inclui cabeçalho, painel de seleção de moedas, campo de entrada, botão de cálculo e exibição de resultados.
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -280,6 +292,8 @@ export default function Conversao() {
   );
 }
 
+// Estilos da interface do aplicativo, incluindo cores, espaçamentos, tamanhos de fonte e layout dos componentes.
+// O StyleSheet é utilizado para manter a consistência visual e facilitar a manutenção do código.
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: CORES.fundo },
   scroll: { paddingBottom: 40, paddingTop: 50 },
